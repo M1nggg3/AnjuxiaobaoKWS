@@ -1,0 +1,18 @@
+name: tts_clean_and_softpos_noisy_oversample
+keyword: "\u5b89\u5c45\u5c0f\u5b9d"
+positive_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_cosyvoice2_500_gpu/manifest.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_softpos_20260507/positive_noisy_manifest.jsonl"
+negative_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_negative_cosyvoice2_1000_gpu/manifest.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_softpos_20260507/negative_noisy_manifest.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_softpos_20260507/pure_noise_manifest.jsonl"
+train_positive_category_repeat:
+  positive_noise_augmented: 3
+output_dir: "data/prepared_tts_clean_and_softpos_noisy_oversample"
+dict_dir: "dict/tts_clean_and_softpos_noisy_oversample"
+split:
+  train: 0.8
+  dev: 0.1
+  test: 0.1
+seed: 777

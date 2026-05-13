@@ -1,0 +1,20 @@
+name: organized_kws_dataset_20260508
+keyword: "\u5b89\u5c45\u5c0f\u5b9d"
+positive_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_kws_dataset_20260508/manifests/tts_positive_clean.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_kws_dataset_20260508/manifests/augmented_positive_noisy.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_kws_dataset_20260508/manifests/real_positive_wakeup_trimmed.jsonl"
+negative_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_kws_dataset_20260508/manifests/tts_negative_clean.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_kws_dataset_20260508/manifests/augmented_negative_noisy.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_kws_dataset_20260508/manifests/augmented_pure_noise.jsonl"
+train_positive_category_repeat:
+  tts_positive_rk20min_noisy: 2
+  rk3566_real_positive_trimmed: 12
+output_dir: "data/prepared_organized_kws_dataset_20260508"
+dict_dir: "dict/organized_kws_dataset_20260508"
+split:
+  train: 0.8
+  dev: 0.1
+  test: 0.1
+seed: 508

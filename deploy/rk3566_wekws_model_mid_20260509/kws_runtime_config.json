@@ -1,0 +1,16 @@
+{
+  "mode": "wekws_fsmn_ctc",
+  "keyword": "????",
+  "model": "kws.onnx",
+  "threshold_initial": 0.4,
+  "sample_rate": 16000,
+  "fbank_dim": 80,
+  "model_input_dim": 400,
+  "context_left": 2,
+  "context_right": 2,
+  "frame_skip": 3,
+  "num_layers": 4,
+  "checkpoint": "E:\\CodeWorking\\Project\\AnJuXiaoBaoKWS\\experiments\\pretrain_posbalanced_mid_20260509_001\\5.pt",
+  "experiment": "pretrain_posbalanced_mid_20260509_001",
+  "note": "RK3566 realtime test build for latest WeKWS FSMN-CTC round. Threshold needs real-device calibration."
+}

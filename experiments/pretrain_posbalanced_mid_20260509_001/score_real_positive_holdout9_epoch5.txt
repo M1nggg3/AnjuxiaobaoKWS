@@ -1,0 +1,9 @@
+recording_20250708032158 detected 安居小宝 0.686
+recording_20250708032349 detected 安居小宝 0.755
+recording_20260508091106 detected 安居小宝 0.662
+recording_20250708032410 detected 安居小宝 0.700
+recording_20260508090952 detected 安居小宝 0.705
+recording_20250708032244 detected 安居小宝 0.774
+recording_20250708032252 rejected
+recording_20250708032225 detected 安居小宝 0.167
+recording_20250708032205 detected 安居小宝 0.425

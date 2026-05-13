@@ -1,0 +1,16 @@
+name: tts_rk20min_noisy_with_purenoise_oversample
+keyword: "\u5b89\u5c45\u5c0f\u5b9d"
+positive_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_rk20min_20260507/positive_noisy_manifest.jsonl"
+negative_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_rk20min_20260507/negative_noisy_manifest.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_rk20min_20260507/pure_noise_manifest.jsonl"
+train_positive_category_repeat:
+  positive_noise_augmented: 3
+output_dir: "data/prepared_tts_rk20min_noisy_with_purenoise_oversample"
+dict_dir: "dict/tts_rk20min_noisy_with_purenoise_oversample"
+split:
+  train: 0.8
+  dev: 0.1
+  test: 0.1
+seed: 779

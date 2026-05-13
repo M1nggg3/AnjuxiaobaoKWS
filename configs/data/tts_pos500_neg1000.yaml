@@ -1,0 +1,11 @@
+name: tts_pos500_neg1000
+keyword: "\u5b89\u5c45\u5c0f\u5b9d"
+positive_manifest: "E:/CodeWorking/Dataset/anju_xiaobao_cosyvoice2_500_gpu/manifest.jsonl"
+negative_manifest: "E:/CodeWorking/Dataset/anju_xiaobao_negative_cosyvoice2_1000_gpu/manifest.jsonl"
+output_dir: "data/prepared_tts_pos500_neg1000"
+dict_dir: "dict/tts_pos500_neg1000"
+split:
+  train: 0.8
+  dev: 0.1
+  test: 0.1
+seed: 777

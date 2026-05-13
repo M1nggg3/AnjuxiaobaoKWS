@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Audio captures and generated audio data may contain real voices.
+*.wav
+*.pcm
+*.mp3
+*.flac
+*.m4a
+
+# Android / Gradle generated outputs
+.gradle/
+**/.gradle/
+**/build/
+**/.cxx/
+local.properties
+
+# Project generated archives and local-only history
+_archive/
+
+# Local device capture artifacts may contain real voices.
+data/rk3566_live_capture_debug/
+
+# TensorBoard and generated caches
+tensorboard/
+**/tensorboard/
+**/.cache/
+
+# Large external datasets are kept under E:\CodeWorking\Dataset and referenced
+# by prepared manifests. Do not vendor them into this repository.

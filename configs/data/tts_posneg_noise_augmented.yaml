@@ -1,0 +1,16 @@
+name: tts_posneg_noise_augmented
+keyword: "\u5b89\u5c45\u5c0f\u5b9d"
+positive_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_cosyvoice2_500_gpu/manifest.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_20260507/manifest.jsonl"
+negative_manifests:
+  - "E:/CodeWorking/Dataset/anju_xiaobao_negative_cosyvoice2_1000_gpu/manifest.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_20260507/manifest.jsonl"
+  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_20260507/pure_noise_manifest.jsonl"
+output_dir: "data/prepared_tts_posneg_noise_augmented"
+dict_dir: "dict/tts_posneg_noise_augmented"
+split:
+  train: 0.8
+  dev: 0.1
+  test: 0.1
+seed: 777

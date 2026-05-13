@@ -1,0 +1,68 @@
+dataset_conf:
+  batch_conf:
+    batch_size: 32
+  context_expansion: true
+  context_expansion_conf:
+    left: 2
+    right: 2
+  fbank_conf:
+    dither: 0.0
+    frame_length: 25
+    frame_shift: 10
+    num_mel_bins: 80
+  feats_type: fbank
+  filter_conf:
+    max_length: 2048
+    max_output_input_ratio: 1
+    min_length: 0
+    min_output_input_ratio: 0.0005
+    token_max_length: 20
+    token_min_length: 1
+  frame_skip: 3
+  resample_conf:
+    resample_rate: 16000
+  shuffle: true
+  shuffle_conf:
+    shuffle_size: 1000
+  sort: false
+  spec_aug: true
+  spec_aug_conf:
+    max_f: 10
+    max_t: 20
+    num_f_mask: 1
+    num_t_mask: 1
+  speed_perturb: false
+model:
+  activation:
+    type: identity
+  backbone:
+    input_affine_dim: 140
+    left_order: 10
+    left_stride: 1
+    linear_dim: 250
+    num_layers: 4
+    output_affine_dim: 140
+    proj_dim: 128
+    right_order: 2
+    right_stride: 1
+    type: fsmn
+  classifier:
+    dropout: 0.1
+    type: identity
+  cmvn:
+    cmvn_file: E:\CodeWorking\Dataset\modelscope_cache\thuduj12\kws_wenwen_fsmn_ctc\global_cmvn.kaldi
+    norm_var: true
+  hidden_dim: 128
+  input_dim: 400
+  output_dim: 6
+  preprocessing:
+    type: none
+optim: adam
+optim_conf:
+  lr: 0.001
+  weight_decay: 0.0001
+training_config:
+  criterion: ctc
+  grad_clip: 5
+  log_interval: 5
+  max_epoch: 20

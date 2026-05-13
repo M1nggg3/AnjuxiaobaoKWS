@@ -1,0 +1,43 @@
+{
+  "total": 1665,
+  "positive": 837,
+  "negative": 828,
+  "splits": {
+    "train": {
+      "total": 1443,
+      "positive": 771,
+      "negative": 672
+    },
+    "dev": {
+      "total": 126,
+      "positive": 43,
+      "negative": 83
+    },
+    "test": {
+      "total": 96,
+      "positive": 23,
+      "negative": 73
+    }
+  },
+  "by_category": {
+    "tts_negative_aishell218_rk_noise": 436,
+    "real_noise_train": 140,
+    "tts_positive_aishell218_rk_noise_oversampled": 555,
+    "hard_negative_pseudocut_partial_keyword": 130,
+    "rk3566_real_positive_train_oversampled": 72,
+    "rk3566_real_positive_augmented": 144,
+    "continuous_false_alarm_hard_negative": 90,
+    "hard_negative_office_speech": 16,
+    "hard_negative_near": 16,
+    "tts_positive_aishell218_rk_noise": 66
+  },
+  "real_positive_train_count": 18,
+  "real_positive_augmented_count": 144,
+  "real_positive_holdout_count": 9,
+  "mined_false_alarm_train_count": 90,
+  "mined_false_alarm_holdout_count": 39,
+  "tts_positive_full_repeat": 1,
+  "tts_positive_extra_ratio": 0.5,
+  "hard_pseudocut_train_count": 80,
+  "note": "Positive-balanced round: TTS positives are duplicated, real positives are augmented, pseudocut hard negatives and mined false alarms are reduced."
+}

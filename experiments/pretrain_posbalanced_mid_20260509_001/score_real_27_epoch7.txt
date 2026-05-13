@@ -1,0 +1,27 @@
+recording_20250708032216 detected 安居小宝 0.648
+recording_20250708032158 detected 安居小宝 0.597
+recording_20250708032238 detected 安居小宝 0.639
+recording_20250708032231 detected 安居小宝 0.594
+recording_20250708032221 detected 安居小宝 0.570
+recording_20250708032247 detected 安居小宝 0.625
+recording_20250708032209 detected 安居小宝 0.572
+recording_20250708032241 detected 安居小宝 0.609
+recording_20250708032345 detected 安居小宝 0.613
+recording_20250708032213 detected 安居小宝 0.634
+recording_20250708032244 detected 安居小宝 0.648
+recording_20250708032252 rejected
+recording_20250708032225 rejected
+recording_20250708032228 detected 安居小宝 0.613
+recording_20250708032205 detected 安居小宝 0.358
+recording_20250708032235 detected 安居小宝 0.630
+recording_20250708032359 detected 安居小宝 0.691
+recording_20250708032413 detected 安居小宝 0.659
+recording_20250708032349 detected 安居小宝 0.677
+recording_20250708032404 detected 安居小宝 0.651
+recording_20260508091007 detected 安居小宝 0.575
+recording_20260508091106 detected 安居小宝 0.499
+recording_20260508090958 detected 安居小宝 0.578
+recording_20260508090942 detected 安居小宝 0.613
+recording_20250708032410 detected 安居小宝 0.599
+recording_20260508090952 detected 安居小宝 0.599
+recording_20250708032354 detected 安居小宝 0.598

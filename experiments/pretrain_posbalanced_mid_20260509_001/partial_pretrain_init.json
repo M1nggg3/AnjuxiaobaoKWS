@@ -1,0 +1,59 @@
+{
+  "config": "configs\\train\\fsmn_ctc_pretrain_hardneg_20260509.yaml",
+  "pretrained": "E:\\CodeWorking\\Dataset\\modelscope_cache\\thuduj12\\kws_wenwen_fsmn_ctc\\avg_30.pt",
+  "output": "experiments\\pretrain_posbalanced_mid_20260509_001\\partial_pretrain_init.pt",
+  "loaded_count": 28,
+  "skipped_count": 2,
+  "loaded": [
+    "global_cmvn.mean",
+    "global_cmvn.istd",
+    "backbone.in_linear1.linear.weight",
+    "backbone.in_linear1.linear.bias",
+    "backbone.in_linear2.linear.weight",
+    "backbone.in_linear2.linear.bias",
+    "backbone.fsmn.0.0.linear.weight",
+    "backbone.fsmn.0.1.conv_left.weight",
+    "backbone.fsmn.0.1.conv_right.weight",
+    "backbone.fsmn.0.2.linear.weight",
+    "backbone.fsmn.0.2.linear.bias",
+    "backbone.fsmn.1.0.linear.weight",
+    "backbone.fsmn.1.1.conv_left.weight",
+    "backbone.fsmn.1.1.conv_right.weight",
+    "backbone.fsmn.1.2.linear.weight",
+    "backbone.fsmn.1.2.linear.bias",
+    "backbone.fsmn.2.0.linear.weight",
+    "backbone.fsmn.2.1.conv_left.weight",
+    "backbone.fsmn.2.1.conv_right.weight",
+    "backbone.fsmn.2.2.linear.weight",
+    "backbone.fsmn.2.2.linear.bias",
+    "backbone.fsmn.3.0.linear.weight",
+    "backbone.fsmn.3.1.conv_left.weight",
+    "backbone.fsmn.3.1.conv_right.weight",
+    "backbone.fsmn.3.2.linear.weight",
+    "backbone.fsmn.3.2.linear.bias",
+    "backbone.out_linear1.linear.weight",
+    "backbone.out_linear1.linear.bias"
+  ],
+  "skipped": [
+    {
+      "key": "backbone.out_linear2.linear.weight",
+      "pretrained_shape": [
+        2599,
+        140
+      ],
+      "current_shape": [
+        6,
+        140
+      ]
+    },
+    {
+      "key": "backbone.out_linear2.linear.bias",
+      "pretrained_shape": [
+        2599
+      ],
+      "current_shape": [
+        6
+      ]
+    }
+  ]
+}
