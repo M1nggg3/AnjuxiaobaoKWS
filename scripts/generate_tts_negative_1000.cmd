@@ -2,8 +2,8 @@
 setlocal
 set "PROJECT_ROOT=%~dp0.."
 set "PYTHON=D:\conda-envs\cosyvoice310\python.exe"
-set "OUT_DIR=E:\CodeWorking\Dataset\anju_xiaobao_negative_cosyvoice2_1000_gpu"
-set "PROMPT_MANIFEST=E:\CodeWorking\Dataset\anju_xiaobao_cosyvoice2_500_gpu\prompt_voices.jsonl"
+set "OUT_DIR=E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_negative_cosyvoice2_1000_gpu"
+set "PROMPT_MANIFEST=E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_cosyvoice2_500_gpu\prompt_voices.jsonl"
 set "MODEL_DIR=D:\models\CosyVoice2-0.5B"
 set "COSYVOICE_REPO=D:\codeWorking\TTS\CosyVoice"
 

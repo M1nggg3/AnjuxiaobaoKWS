@@ -1,0 +1,22 @@
+{
+  "raw": {
+    "file": "E:\\CodeWorking\\Project\\AnJuXiaoBaoKWS\\data\\rk3566_new_board_audio_check\\listen_session_20260528_143246\\raw_16k_s16le.pcm",
+    "wav": "E:\\CodeWorking\\Project\\AnJuXiaoBaoKWS\\data\\rk3566_new_board_audio_check\\listen_session_20260528_143246\\raw_16k_s16le.wav",
+    "bytes": 381440,
+    "samples": 190720,
+    "duration_sec": 11.92,
+    "rms": 372.64117112606425,
+    "peak": 3477,
+    "clipping_ratio": 0.0
+  },
+  "enhanced": {
+    "file": "E:\\CodeWorking\\Project\\AnJuXiaoBaoKWS\\data\\rk3566_new_board_audio_check\\listen_session_20260528_143246\\enhanced_16k_s16le.pcm",
+    "wav": "E:\\CodeWorking\\Project\\AnJuXiaoBaoKWS\\data\\rk3566_new_board_audio_check\\listen_session_20260528_143246\\enhanced_16k_s16le.wav",
+    "bytes": 381440,
+    "samples": 190720,
+    "duration_sec": 11.92,
+    "rms": 538.7459573241711,
+    "peak": 6703,
+    "clipping_ratio": 0.0
+  }
+}

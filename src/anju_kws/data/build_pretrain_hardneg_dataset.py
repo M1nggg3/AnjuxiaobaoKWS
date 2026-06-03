@@ -121,9 +121,9 @@ def write_dict(dict_dir: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_aishell218_posneg_rknoise_20260509\manifest.jsonl")
-    parser.add_argument("--hard_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_hard_negative_aishell218_rknoise_20260509\manifest.jsonl")
-    parser.add_argument("--real_noise_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_kws_dataset_20260508\fixed_eval\negative_noise\manifest.jsonl")
+    parser.add_argument("--base_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_aishell218_posneg_rknoise_20260509\manifest.jsonl")
+    parser.add_argument("--hard_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_hard_negative_aishell218_rknoise_20260509\manifest.jsonl")
+    parser.add_argument("--real_noise_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_kws_dataset_20260508\fixed_eval\negative_noise\manifest.jsonl")
     parser.add_argument("--output_dir", default=r"E:\CodeWorking\Project\AnJuXiaoBaoKWS\data\prepared_pretrain_hardneg_20260509")
     parser.add_argument("--dict_dir", default=r"E:\CodeWorking\Project\AnJuXiaoBaoKWS\dict\pretrain_hardneg_20260509")
     parser.add_argument("--max_real_noise_train", type=int, default=160)

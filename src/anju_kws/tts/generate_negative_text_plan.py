@@ -266,8 +266,8 @@ def build_plan(prompt_manifest: Path, out_dir: Path, seed: int) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--prompt_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_cosyvoice2_500_gpu\prompt_voices.jsonl")
-    parser.add_argument("--output_dir", default=r"E:\CodeWorking\Dataset\anju_xiaobao_negative_cosyvoice2_1000_gpu")
+    parser.add_argument("--prompt_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_cosyvoice2_500_gpu\prompt_voices.jsonl")
+    parser.add_argument("--output_dir", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_negative_cosyvoice2_1000_gpu")
     parser.add_argument("--seed", type=int, default=20260507)
     args = parser.parse_args()
     summary = build_plan(Path(args.prompt_manifest), Path(args.output_dir), args.seed)

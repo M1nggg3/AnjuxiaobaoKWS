@@ -1,8 +1,17 @@
-{
+﻿{
   "mode": "wekws_fsmn_ctc",
-  "keyword": "????",
+  "keyword": "\u5b89\u5c45\u5c0f\u5b9d",
   "model": "kws.onnx",
-  "threshold_initial": 0.4,
+  "threshold_initial": 0.7,
+  "speech_rms_threshold": 50,
+  "speech_peak_threshold": 300,
+  "silence_chunks_before_reset": 20,
+  "soft_reset_interval_chunks": 120,
+  "sliding_window_ms": 1200,
+  "sliding_hop_ms": 100,
+  "sliding_consecutive_hits": 2,
+  "sliding_cooldown_ms": 1800,
+  "enable_wakeup_tone": true,
   "sample_rate": 16000,
   "fbank_dim": 80,
   "model_input_dim": 400,
@@ -10,7 +19,12 @@
   "context_right": 2,
   "frame_skip": 3,
   "num_layers": 4,
-  "checkpoint": "E:\\CodeWorking\\Project\\AnJuXiaoBaoKWS\\experiments\\pretrain_posbalanced_mid_20260509_001\\5.pt",
-  "experiment": "pretrain_posbalanced_mid_20260509_001",
-  "note": "RK3566 realtime test build for latest WeKWS FSMN-CTC round. Threshold needs real-device calibration."
+  "cache_dim": 128,
+  "cache_len": 11,
+  "checkpoint": "wekws/fsmn_ctc_m2_m1_neg2500_pretrained_finetune_20260602_001/28.pt",
+  "onnx": "wekws/fsmn_ctc_m2_m1_neg2500_pretrained_finetune_20260602_001/deploy_android/kws.onnx",
+  "experiment": "fsmn_ctc_m2_m1_neg2500_pretrained_finetune_20260602_001",
+  "source": "local:E:/CodeWorking/model/AnJuXiaoBaoKWS",
+  "note": "Default Android asset points to the M2+M1+2500 negative pretrained finetune WeKWS model. Threshold is initialized to 0.7 based on M2 30pos10neg offline score_ctc evaluation. Streaming speech onset relaxed to RMS 50 and peak 300; soft reset interval widened to 120 chunks for far-field real voice testing."
 }
+

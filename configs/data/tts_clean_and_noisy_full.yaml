@@ -1,12 +1,12 @@
 name: tts_clean_and_noisy_full
 keyword: "\u5b89\u5c45\u5c0f\u5b9d"
 positive_manifests:
-  - "E:/CodeWorking/Dataset/anju_xiaobao_cosyvoice2_500_gpu/manifest.jsonl"
-  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_full_20260507/positive_noisy_manifest.jsonl"
+  - "E:/CodeWorking/datasets/AnJuXiaoBaoKWS/data/anju_xiaobao_cosyvoice2_500_gpu/manifest.jsonl"
+  - "E:/CodeWorking/datasets/AnJuXiaoBaoKWS/data/anju_xiaobao_noise_augmented_full_20260507/positive_noisy_manifest.jsonl"
 negative_manifests:
-  - "E:/CodeWorking/Dataset/anju_xiaobao_negative_cosyvoice2_1000_gpu/manifest.jsonl"
-  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_full_20260507/negative_noisy_manifest.jsonl"
-  - "E:/CodeWorking/Dataset/anju_xiaobao_noise_augmented_full_20260507/pure_noise_manifest.jsonl"
+  - "E:/CodeWorking/datasets/AnJuXiaoBaoKWS/data/anju_xiaobao_negative_cosyvoice2_1000_gpu/manifest.jsonl"
+  - "E:/CodeWorking/datasets/AnJuXiaoBaoKWS/data/anju_xiaobao_noise_augmented_full_20260507/negative_noisy_manifest.jsonl"
+  - "E:/CodeWorking/datasets/AnJuXiaoBaoKWS/data/anju_xiaobao_noise_augmented_full_20260507/pure_noise_manifest.jsonl"
 output_dir: "data/prepared_tts_clean_and_noisy_full"
 dict_dir: "dict/tts_clean_and_noisy_full"
 split:

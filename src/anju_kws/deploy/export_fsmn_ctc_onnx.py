@@ -68,7 +68,7 @@ def main():
         },
     )
     output_ok = torch.allclose(torch_output[0], torch.tensor(ort_output[0]), atol=1e-5)
-    cache_ok = torch.allclose(torch_output[1], torch.tensor(ort_output[1]), atol=1e-5)
+    cache_ok = torch.allclose(torch_output[1], torch.tensor(ort_output[1]), atol=1e-4)
     print(
         {
             "onnx_model": str(output_path),

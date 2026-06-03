@@ -9,9 +9,14 @@ public class Spot {
     public static native void init(String modelDir, float threshold);
     public static native void reset();
     public static native void setThreshold(float threshold);
+    public static native void configureStreaming(float speechRmsThreshold,
+                                                 int speechPeakThreshold,
+                                                 int silenceChunksBeforeReset,
+                                                 int softResetIntervalChunks);
     public static native void acceptWaveform(short[] waveform);
     public static native void setInputFinished();
     public static native void startSpot();
+    public static native String scoreWindow(short[] waveform);
     public static native String getResult();
     public static native String getDebug();
 }

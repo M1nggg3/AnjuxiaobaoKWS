@@ -53,8 +53,8 @@ def save_pseudocut(src: Path, dst: Path, keep_ratio: float) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_aishell218_posneg_rknoise_20260509\manifest.jsonl")
-    parser.add_argument("--output_dir", default=r"E:\CodeWorking\Dataset\anju_xiaobao_hard_negative_aishell218_pseudocut_rknoise_20260509")
+    parser.add_argument("--base_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_aishell218_posneg_rknoise_20260509\manifest.jsonl")
+    parser.add_argument("--output_dir", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_hard_negative_aishell218_pseudocut_rknoise_20260509")
     parser.add_argument("--seed", type=int, default=20260509)
     parser.add_argument("--keep_ratio_min", type=float, default=0.58)
     parser.add_argument("--keep_ratio_max", type=float, default=0.72)

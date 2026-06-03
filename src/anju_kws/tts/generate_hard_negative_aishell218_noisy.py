@@ -124,9 +124,9 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--prompt_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_aishell218_posneg_rknoise_20260509\selected_prompts.jsonl")
-    parser.add_argument("--noise_dir", default=r"E:\CodeWorking\Dataset\anju_xiaobao_kws_dataset_20260508\real_recordings\office_noise\rk3566_noise_segments")
-    parser.add_argument("--output_dir", default=r"E:\CodeWorking\Dataset\anju_xiaobao_hard_negative_aishell218_rknoise_20260509")
+    parser.add_argument("--prompt_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_aishell218_posneg_rknoise_20260509\selected_prompts.jsonl")
+    parser.add_argument("--noise_dir", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_kws_dataset_20260508\real_recordings\office_noise\rk3566_noise_segments")
+    parser.add_argument("--output_dir", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_hard_negative_aishell218_rknoise_20260509")
     parser.add_argument("--model_dir", default=r"D:\models\CosyVoice2-0.5B")
     parser.add_argument("--cosyvoice_repo", default=r"D:\codeWorking\TTS\CosyVoice")
     parser.add_argument("--seed", type=int, default=20260509)

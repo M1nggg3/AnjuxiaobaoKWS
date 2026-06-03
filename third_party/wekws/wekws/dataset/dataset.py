@@ -47,6 +47,13 @@ class Processor(IterableDataset):
         assert callable(f)
         return Processor(self, f, *self.args, **self.kw)
 
+    def map(self, f):
+        assert callable(f)
+        def apply_one(data):
+            for sample in data:
+                yield f(sample)
+        return Processor(self, apply_one)
+
 
 class DistributedSampler:
 

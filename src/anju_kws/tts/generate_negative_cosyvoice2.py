@@ -86,8 +86,8 @@ def load_plan(plan_path: Path) -> list[dict]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--text_plan", default=r"E:\CodeWorking\Dataset\anju_xiaobao_negative_cosyvoice2_1000_gpu\text_plan.jsonl")
-    parser.add_argument("--output_dir", default=r"E:\CodeWorking\Dataset\anju_xiaobao_negative_cosyvoice2_1000_gpu")
+    parser.add_argument("--text_plan", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_negative_cosyvoice2_1000_gpu\text_plan.jsonl")
+    parser.add_argument("--output_dir", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_negative_cosyvoice2_1000_gpu")
     parser.add_argument("--model_dir", default=r"D:\models\CosyVoice2-0.5B")
     parser.add_argument("--cosyvoice_repo", default=r"D:\codeWorking\TTS\CosyVoice")
     parser.add_argument("--overwrite", action="store_true")

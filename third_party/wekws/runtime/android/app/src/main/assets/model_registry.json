@@ -1,0 +1,33 @@
+{
+  "default_model_id": "original_mid_20260509",
+  "models": [
+    {
+      "id": "original_mid_20260509",
+      "display_name": "Original mid 20260509",
+      "asset_dir": "models/original_mid_20260509",
+      "model_asset": "models/original_mid_20260509/kws.onnx",
+      "config_asset": "models/original_mid_20260509/kws_runtime_config.json"
+    },
+    {
+      "id": "m1_rawonly_finetune",
+      "display_name": "M1 raw-only 微调版",
+      "asset_dir": "models/m1_rawonly_finetune",
+      "model_asset": "models/m1_rawonly_finetune/kws.onnx",
+      "config_asset": "models/m1_rawonly_finetune/kws_runtime_config.json"
+    },
+    {
+      "id": "m1_rawonly_pretrain_full",
+      "display_name": "M1 raw-only 全参训练版",
+      "asset_dir": "models/m1_rawonly_pretrain_full",
+      "model_asset": "models/m1_rawonly_pretrain_full/kws.onnx",
+      "config_asset": "models/m1_rawonly_pretrain_full/kws_runtime_config.json"
+    },
+    {
+      "id": "m2_m1_neg2500_pretrained_finetune",
+      "display_name": "M2+M1+2500负样本 WeKWS 微调版",
+      "asset_dir": "models/m2_m1_neg2500_pretrained_finetune",
+      "model_asset": "models/m2_m1_neg2500_pretrained_finetune/kws.onnx",
+      "config_asset": "models/m2_m1_neg2500_pretrained_finetune/kws_runtime_config.json"
+    }
+  ]
+}

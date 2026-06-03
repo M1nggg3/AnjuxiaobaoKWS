@@ -1,0 +1,50 @@
+{
+  "output_dir": "data\\anju_xiaobao_farfield_cosyvoice3_slim_20260519",
+  "selected_prompt_count": 20,
+  "generation_plan_count": 20,
+  "aishell3_prompt_candidates": 86106,
+  "aishell_prompt_candidates": 141544,
+  "noise_count": 332,
+  "profiles": {
+    "near_0p5m": {
+      "distance_m": 0.5,
+      "attenuation": 0.8,
+      "reverb": 0.04,
+      "hf_loss": 0.04,
+      "snr_db": [
+        20,
+        25,
+        30
+      ]
+    },
+    "mid_1m": {
+      "distance_m": 1.0,
+      "attenuation": 0.48,
+      "reverb": 0.1,
+      "hf_loss": 0.12,
+      "snr_db": [
+        10,
+        15,
+        20
+      ]
+    },
+    "far_2m": {
+      "distance_m": 2.0,
+      "attenuation": 0.28,
+      "reverb": 0.18,
+      "hf_loss": 0.22,
+      "snr_db": [
+        5,
+        10,
+        15
+      ]
+    }
+  },
+  "dry_run": false,
+  "include_homophone_negatives": false,
+  "clean_positive_count": 20,
+  "clean_negative_count": 0,
+  "farfield_positive_count": 180,
+  "farfield_negative_count": 0,
+  "manifest": "data\\anju_xiaobao_farfield_cosyvoice3_slim_20260519\\manifest.jsonl"
+}

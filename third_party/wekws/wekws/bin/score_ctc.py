@@ -133,11 +133,12 @@ def main():
     test_dataset = init_dataset(data_list_file=args.test_data,
                                 conf=test_conf, tokenizer=tokenizer,
                                 split='test')
+    prefetch_factor = args.prefetch if args.num_workers > 0 else None
     test_data_loader = DataLoader(test_dataset,
                                   batch_size=None,
                                   pin_memory=args.pin_memory,
                                   num_workers=args.num_workers,
-                                  prefetch_factor=args.prefetch)
+                                  prefetch_factor=prefetch_factor)
 
     if args.jit_model:
         model = torch.jit.load(args.checkpoint)

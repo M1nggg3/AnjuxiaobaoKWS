@@ -28,15 +28,14 @@ constexpr int kModelInputDim = kFbankDim * kContextWindow;
 constexpr int kFrameSkip = 3;
 constexpr int kReadFrames = 80;
 constexpr int kBlankId = 0;
-constexpr int kScoreBeamSize = 3;
-constexpr int kPathBeamSize = 20;
-constexpr int kMinFrames = 5;
+constexpr int kFillerId = 5;
+constexpr int kScoreBeamSize = 5;
+constexpr int kPathBeamSize = 30;
+constexpr int kMinFrames = 3;
 constexpr int kMaxFrames = 250;
 constexpr int kIntervalFrames = 50;
-constexpr float kScorePruneThreshold = 0.05f;
-constexpr float kSpeechRmsThreshold = 1200.0f;
-constexpr int kSpeechPeakThreshold = 5000;
-constexpr int kSilenceChunksBeforeReset = 20;
+constexpr int kRecentScoreHoldFrames = 50;
+constexpr float kScorePruneThreshold = 0.02f;
 constexpr bool kDebugDecode = true;
 const int kKeywordIds[] = {1, 2, 3, 4};
 
@@ -76,7 +75,26 @@ std::vector<std::vector<float>> feature_remained;
 std::vector<Hyp> cur_hyps;
 int debug_chunk_count = 0;
 int last_pruned_hyps = 0;
+float recent_keyword_score = 0.0f;
+int recent_keyword_end_frame = -1;
 int consecutive_silence_chunks = 0;
+int stream_chunk_index = 0;
+int chunks_since_stream_reset = 0;
+float speech_rms_threshold = 70.0f;
+int speech_peak_threshold = 500;
+int silence_chunks_before_reset = 20;
+int soft_reset_interval_chunks = 50;
+double last_raw_rms = 0.0;
+int last_raw_peak = 0;
+bool last_speech = false;
+std::string last_reset_type = "none";
+int last_reset_silence_chunks = 0;
+int last_reset_chunk_index = 0;
+
+struct ChunkStats {
+  double rms = 0.0;
+  int peak = 0;
+};
 
 std::string TokenToString(int token) {
   switch (token) {
@@ -174,11 +192,14 @@ void ResetStreamingState(bool reset_model_cache, bool reset_feature_pipeline) {
   debug_result.clear();
   debug_chunk_count = 0;
   last_pruned_hyps = 0;
+  recent_keyword_score = 0.0f;
+  recent_keyword_end_frame = -1;
   ResetDecoder();
 }
 
-bool IsSpeechChunk(const std::vector<int16_t>& data) {
-  if (data.empty()) return false;
+ChunkStats ComputeChunkStats(const std::vector<int16_t>& data) {
+  ChunkStats stats;
+  if (data.empty()) return stats;
   double sum_squares = 0.0;
   int peak = 0;
   for (int16_t sample : data) {
@@ -187,14 +208,20 @@ bool IsSpeechChunk(const std::vector<int16_t>& data) {
     peak = std::max(peak, abs_value);
     sum_squares += static_cast<double>(value) * value;
   }
-  double rms = std::sqrt(sum_squares / static_cast<double>(data.size()));
-  return rms >= kSpeechRmsThreshold || peak >= kSpeechPeakThreshold;
+  stats.rms = std::sqrt(sum_squares / static_cast<double>(data.size()));
+  stats.peak = peak;
+  return stats;
+}
+
+bool IsSpeechChunk(const ChunkStats& stats) {
+  return stats.rms >= speech_rms_threshold ||
+         stats.peak >= speech_peak_threshold;
 }
 
 bool IsKeywordToken(int token) {
   return token == kBlankId || token == kKeywordIds[0] ||
          token == kKeywordIds[1] || token == kKeywordIds[2] ||
-         token == kKeywordIds[3];
+         token == kKeywordIds[3] || token == kFillerId;
 }
 
 bool NearlyZero(double value) { return std::abs(value) <= 0.000001; }
@@ -325,20 +352,26 @@ void PruneStalePartialPrefixes(int frame) {
   cur_hyps = std::move(kept);
 }
 
-int FindKeywordOffset(const std::vector<int>& prefix) {
+std::vector<int> FindKeywordNodeIndexes(const std::vector<int>& prefix) {
   constexpr int keyword_len = 4;
-  if (prefix.size() < keyword_len) return -1;
-  for (int i = 0; i <= static_cast<int>(prefix.size()) - keyword_len; ++i) {
-    bool matched = true;
-    for (int j = 0; j < keyword_len; ++j) {
-      if (prefix[i + j] != kKeywordIds[j]) {
-        matched = false;
+  if (prefix.size() < keyword_len) return {};
+  for (int start = 0; start < static_cast<int>(prefix.size()); ++start) {
+    std::vector<int> indexes;
+    int target = 0;
+    for (int pos = start; pos < static_cast<int>(prefix.size()); ++pos) {
+      int token = prefix[pos];
+      if (token == kKeywordIds[target]) {
+        indexes.push_back(pos);
+        ++target;
+        if (target == keyword_len) return indexes;
+      } else if (token == kFillerId && !indexes.empty()) {
+        continue;
+      } else {
         break;
       }
     }
-    if (matched) return i;
   }
-  return -1;
+  return {};
 }
 
 struct DetectionResult {
@@ -352,25 +385,30 @@ struct DetectionResult {
 DetectionResult ExecuteDetection() {
   DetectionResult result;
   for (const auto& hyp : cur_hyps) {
-    int offset = FindKeywordOffset(hyp.prefix);
-    if (offset < 0) continue;
-    if (offset + 3 >= static_cast<int>(hyp.nodes.size())) continue;
+    std::vector<int> indexes = FindKeywordNodeIndexes(hyp.prefix);
+    if (indexes.size() != 4) continue;
+    if (indexes.back() >= static_cast<int>(hyp.nodes.size())) continue;
 
     float product = 1.0f;
-    for (int i = offset; i < offset + 4; ++i) {
-      product *= std::max(1e-6f, hyp.nodes[i].prob);
+    for (int index : indexes) {
+      product *= std::max(1e-6f, hyp.nodes[index].prob);
     }
-    float score = std::sqrt(product);
+    float score = std::pow(product, 0.25f);
     if (!result.has_keyword || score > result.score) {
       result.has_keyword = true;
-      result.start = hyp.nodes[offset].frame;
-      result.end = hyp.nodes[offset + 3].frame;
+      result.start = hyp.nodes[indexes.front()].frame;
+      result.end = hyp.nodes[indexes.back()].frame;
       result.score = score;
     }
   }
 
   if (result.has_keyword) {
     int duration = result.end - result.start;
+    if (result.score > recent_keyword_score ||
+        result.end - recent_keyword_end_frame > kRecentScoreHoldFrames) {
+      recent_keyword_score = result.score;
+      recent_keyword_end_frame = result.end;
+    }
     result.wakeup = result.score >= threshold &&
                     kMinFrames <= duration && duration <= kMaxFrames &&
                     (last_active_frame == -1 ||
@@ -388,7 +426,12 @@ std::string FormatResult(bool wakeup, float score, double elapsed_ms) {
     oss << "listening";
   }
   oss << " score=" << score << " threshold=" << threshold
-      << " frame=" << total_frames << " infer_ms=" << elapsed_ms;
+      << " frame=" << total_frames << " infer_ms=" << elapsed_ms
+      << " raw_rms=" << last_raw_rms
+      << " raw_peak=" << last_raw_peak
+      << " speech=" << (last_speech ? "true" : "false")
+      << " reset=" << last_reset_type
+      << " chunk=" << stream_chunk_index;
   return oss.str();
 }
 
@@ -406,6 +449,14 @@ void init(JNIEnv* env, jobject, jstring jModelDir, jfloat jThreshold) {
   feature_config->Info();
 
   consecutive_silence_chunks = 0;
+  stream_chunk_index = 0;
+  chunks_since_stream_reset = 0;
+  last_raw_rms = 0.0;
+  last_raw_peak = 0;
+  last_speech = false;
+  last_reset_type = "none";
+  last_reset_silence_chunks = 0;
+  last_reset_chunk_index = 0;
   ResetStreamingState(false, false);
   {
     std::lock_guard<std::mutex> lock(result_mutex);
@@ -416,6 +467,14 @@ void init(JNIEnv* env, jobject, jstring jModelDir, jfloat jThreshold) {
 void reset(JNIEnv*, jobject) {
   std::lock_guard<std::mutex> lock(pipeline_mutex);
   consecutive_silence_chunks = 0;
+  stream_chunk_index = 0;
+  chunks_since_stream_reset = 0;
+  last_raw_rms = 0.0;
+  last_raw_peak = 0;
+  last_speech = false;
+  last_reset_type = "none";
+  last_reset_silence_chunks = 0;
+  last_reset_chunk_index = 0;
   ResetStreamingState(true, true);
   {
     std::lock_guard<std::mutex> lock(result_mutex);
@@ -425,6 +484,25 @@ void reset(JNIEnv*, jobject) {
 
 void set_threshold(JNIEnv*, jobject, jfloat jThreshold) { threshold = jThreshold; }
 
+void configure_streaming(JNIEnv*, jobject, jfloat jSpeechRmsThreshold,
+                         jint jSpeechPeakThreshold,
+                         jint jSilenceChunksBeforeReset,
+                         jint jSoftResetIntervalChunks) {
+  std::lock_guard<std::mutex> lock(pipeline_mutex);
+  speech_rms_threshold = std::max(0.0f, jSpeechRmsThreshold);
+  speech_peak_threshold = std::max(0, static_cast<int>(jSpeechPeakThreshold));
+  silence_chunks_before_reset =
+      std::max(0, static_cast<int>(jSilenceChunksBeforeReset));
+  soft_reset_interval_chunks =
+      std::max(0, static_cast<int>(jSoftResetIntervalChunks));
+  __android_log_print(
+      ANDROID_LOG_INFO, "WEKWS_NATIVE",
+      "streaming_config speech_rms_threshold=%.1f speech_peak_threshold=%d "
+      "silence_chunks_before_reset=%d soft_reset_interval_chunks=%d",
+      speech_rms_threshold, speech_peak_threshold, silence_chunks_before_reset,
+      soft_reset_interval_chunks);
+}
+
 void accept_waveform(JNIEnv* env, jobject, jshortArray jWaveform) {
   if (!feature_pipeline) return;
   jsize size = env->GetArrayLength(jWaveform);
@@ -433,24 +511,64 @@ void accept_waveform(JNIEnv* env, jobject, jshortArray jWaveform) {
   env->ReleaseShortArrayElements(jWaveform, waveform, JNI_ABORT);
 
   std::lock_guard<std::mutex> lock(pipeline_mutex);
-  bool speech = IsSpeechChunk(data);
+  ChunkStats stats = ComputeChunkStats(data);
+  bool speech = IsSpeechChunk(stats);
+  ++stream_chunk_index;
+  ++chunks_since_stream_reset;
+  last_raw_rms = stats.rms;
+  last_raw_peak = stats.peak;
+  last_speech = speech;
+  last_reset_type = "none";
   if (speech) {
-    if (consecutive_silence_chunks >= kSilenceChunksBeforeReset) {
+    if (consecutive_silence_chunks >= silence_chunks_before_reset) {
+      int reset_silence_chunks = consecutive_silence_chunks;
       ResetStreamingState(true, true);
+      chunks_since_stream_reset = 0;
+      last_reset_type = "speech_onset_reset";
+      last_reset_silence_chunks = reset_silence_chunks;
+      last_reset_chunk_index = stream_chunk_index;
       {
         std::lock_guard<std::mutex> debug_lock(debug_mutex);
         std::ostringstream dbg;
-        dbg << "speech_onset_reset silence_chunks="
-            << consecutive_silence_chunks;
+        dbg << "speech_onset_reset chunk=" << stream_chunk_index
+            << " rms=" << stats.rms
+            << " peak=" << stats.peak
+            << " silence_chunks=" << reset_silence_chunks;
         debug_result = dbg.str();
       }
       __android_log_print(ANDROID_LOG_INFO, "WEKWS_NATIVE",
-                          "speech_onset_reset silence_chunks=%d",
-                          consecutive_silence_chunks);
+                          "speech_onset_reset chunk=%d rms=%.1f peak=%d "
+                          "silence_chunks=%d",
+                          stream_chunk_index, stats.rms, stats.peak,
+                          reset_silence_chunks);
     }
     consecutive_silence_chunks = 0;
   } else {
     ++consecutive_silence_chunks;
+    if (soft_reset_interval_chunks > 0 &&
+        chunks_since_stream_reset >= soft_reset_interval_chunks) {
+      int reset_silence_chunks = consecutive_silence_chunks;
+      ResetStreamingState(true, true);
+      chunks_since_stream_reset = 0;
+      consecutive_silence_chunks = 0;
+      last_reset_type = "soft_reset";
+      last_reset_silence_chunks = reset_silence_chunks;
+      last_reset_chunk_index = stream_chunk_index;
+      {
+        std::lock_guard<std::mutex> debug_lock(debug_mutex);
+        std::ostringstream dbg;
+        dbg << "soft_reset chunk=" << stream_chunk_index
+            << " rms=" << stats.rms
+            << " peak=" << stats.peak
+            << " silence_chunks=" << reset_silence_chunks;
+        debug_result = dbg.str();
+      }
+      __android_log_print(ANDROID_LOG_INFO, "WEKWS_NATIVE",
+                          "soft_reset chunk=%d rms=%.1f peak=%d "
+                          "silence_chunks=%d",
+                          stream_chunk_index, stats.rms, stats.peak,
+                          reset_silence_chunks);
+    }
   }
   feature_pipeline->AcceptWaveform(data);
 }
@@ -499,6 +617,7 @@ void start_spot() {
     if (detection.wakeup) {
       wakeup = true;
       last_active_frame = detection.end;
+      chunks_since_stream_reset = 0;
       ResetDecoder();
       break;
     }
@@ -536,6 +655,117 @@ void start_spot() {
   }
 }
 
+jstring score_window(JNIEnv* env, jobject, jshortArray jWaveform) {
+  if (!spotter || !feature_config) {
+    return env->NewStringUTF("listening score=0.000 threshold=0.000 frame=0 infer_ms=0.000 error=not_initialized");
+  }
+
+  jsize size = env->GetArrayLength(jWaveform);
+  int16_t* waveform = env->GetShortArrayElements(jWaveform, nullptr);
+  std::vector<int16_t> data(waveform, waveform + size);
+  env->ReleaseShortArrayElements(jWaveform, waveform, JNI_ABORT);
+
+  auto start = std::chrono::steady_clock::now();
+  std::lock_guard<std::mutex> lock(pipeline_mutex);
+
+  ChunkStats stats = ComputeChunkStats(data);
+  ++stream_chunk_index;
+  last_raw_rms = stats.rms;
+  last_raw_peak = stats.peak;
+  last_speech = IsSpeechChunk(stats);
+  last_reset_type = "window_reset";
+
+  spotter->Reset();
+  total_frames = 0;
+  last_active_frame = -1;
+  feats_ctx_offset = 0;
+  feature_remained.clear();
+  debug_chunk_count = 0;
+  last_pruned_hyps = 0;
+  recent_keyword_score = 0.0f;
+  recent_keyword_end_frame = -1;
+  ResetDecoder();
+
+  wenet::FeaturePipeline window_pipeline(*feature_config);
+  window_pipeline.AcceptWaveform(data);
+  window_pipeline.set_input_finished();
+
+  std::vector<std::vector<float>> raw_feats;
+  std::vector<float> one_feat;
+  while (window_pipeline.ReadOne(&one_feat)) {
+    raw_feats.push_back(std::move(one_feat));
+  }
+
+  std::vector<std::vector<float>> feats = ExpandAndSkip(raw_feats);
+  std::vector<std::vector<float>> probs;
+  if (!feats.empty()) {
+    spotter->Forward(feats, &probs);
+  }
+
+  float best_keyword_score = 0.0f;
+  bool wakeup = false;
+  std::ostringstream top_trace;
+  int trace_frames = 0;
+  for (int idx = 0; idx < static_cast<int>(probs.size()); ++idx) {
+    int frame = total_frames + idx * kFrameSkip;
+    if (kDebugDecode && trace_frames < 8 && !probs[idx].empty()) {
+      std::vector<std::pair<float, int>> ranked;
+      ranked.reserve(probs[idx].size());
+      for (int i = 0; i < static_cast<int>(probs[idx].size()); ++i) {
+        ranked.emplace_back(probs[idx][i], i);
+      }
+      std::sort(ranked.begin(), ranked.end(),
+                [](const auto& a, const auto& b) { return a.first > b.first; });
+      top_trace << " f" << frame << ":";
+      for (int k = 0; k < std::min(3, static_cast<int>(ranked.size())); ++k) {
+        top_trace << TokenToString(ranked[k].second) << "=" << std::fixed
+                  << std::setprecision(2) << ranked[k].first << "/";
+      }
+      ++trace_frames;
+    }
+
+    cur_hyps = CtcPrefixBeamSearch(frame, probs[idx]);
+    DetectionResult detection = ExecuteDetection();
+    best_keyword_score = std::max(best_keyword_score, detection.score);
+    if (detection.wakeup) {
+      wakeup = true;
+      last_active_frame = detection.end;
+      break;
+    }
+    PruneStalePartialPrefixes(frame);
+  }
+  total_frames += static_cast<int>(probs.size()) * kFrameSkip;
+
+  auto end = std::chrono::steady_clock::now();
+  double elapsed_ms =
+      std::chrono::duration<double, std::milli>(end - start).count();
+
+  std::string top_path = cur_hyps.empty() ? "" : PrefixToString(cur_hyps[0].prefix);
+  double top_path_score = cur_hyps.empty() ? 0.0 : cur_hyps[0].pb + cur_hyps[0].pnb;
+  {
+    std::lock_guard<std::mutex> debug_lock(debug_mutex);
+    std::ostringstream dbg;
+    dbg << "window_decode_debug window_samples=" << data.size()
+        << " raw_feats=" << raw_feats.size()
+        << " expanded_feats=" << feats.size()
+        << " out_frames=" << probs.size()
+        << " best_keyword_score=" << best_keyword_score
+        << " top_path=" << top_path
+        << " top_path_score=" << top_path_score
+        << " pruned_hyps=" << last_pruned_hyps
+        << " trace=" << top_trace.str();
+    debug_result = dbg.str();
+  }
+
+  std::string window_result = FormatResult(wakeup, best_keyword_score, elapsed_ms);
+  {
+    std::lock_guard<std::mutex> result_lock(result_mutex);
+    result = window_result;
+  }
+  ResetDecoder();
+  return env->NewStringUTF(window_result.c_str());
+}
+
 jstring get_result(JNIEnv* env, jobject) {
   std::lock_guard<std::mutex> lock(result_mutex);
   return env->NewStringUTF(result.c_str());
@@ -559,11 +789,15 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void*) {
       {"init", "(Ljava/lang/String;F)V", reinterpret_cast<void*>(wekws::init)},
       {"reset", "()V", reinterpret_cast<void*>(wekws::reset)},
       {"setThreshold", "(F)V", reinterpret_cast<void*>(wekws::set_threshold)},
+      {"configureStreaming", "(FIII)V",
+       reinterpret_cast<void*>(wekws::configure_streaming)},
       {"acceptWaveform", "([S)V",
        reinterpret_cast<void*>(wekws::accept_waveform)},
       {"setInputFinished", "()V",
        reinterpret_cast<void*>(wekws::set_input_finished)},
       {"startSpot", "()V", reinterpret_cast<void*>(wekws::start_spot)},
+      {"scoreWindow", "([S)Ljava/lang/String;",
+       reinterpret_cast<void*>(wekws::score_window)},
       {"getResult", "()Ljava/lang/String;",
        reinterpret_cast<void*>(wekws::get_result)},
       {"getDebug", "()Ljava/lang/String;",

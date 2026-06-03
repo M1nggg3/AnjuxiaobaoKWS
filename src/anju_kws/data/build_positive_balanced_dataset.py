@@ -237,11 +237,11 @@ def oversample_fractional(rows: list[dict], full_repeat: int, extra_ratio: float
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_aishell218_posneg_rknoise_20260509\manifest.jsonl")
-    parser.add_argument("--hard_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_hard_negative_merged_aishell218_20260509\manifest.jsonl")
+    parser.add_argument("--base_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_aishell218_posneg_rknoise_20260509\manifest.jsonl")
+    parser.add_argument("--hard_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\archive\anju_xiaobao_hard_negative_merged_aishell218_20260509\manifest.jsonl")
     parser.add_argument("--real_positive_train_list", default=r"E:\CodeWorking\Project\AnJuXiaoBaoKWS\data\prepared_pretrain_hardneg_realpos_mined_20260509\eval_real_positive_train\data.list")
     parser.add_argument("--real_positive_holdout_list", default=r"E:\CodeWorking\Project\AnJuXiaoBaoKWS\data\prepared_pretrain_hardneg_realpos_mined_20260509\eval_real_positive_holdout\data.list")
-    parser.add_argument("--real_noise_manifest", default=r"E:\CodeWorking\Dataset\anju_xiaobao_kws_dataset_20260508\fixed_eval\negative_noise\manifest.jsonl")
+    parser.add_argument("--real_noise_manifest", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_kws_dataset_20260508\fixed_eval\negative_noise\manifest.jsonl")
     parser.add_argument("--continuous_score", default=r"E:\CodeWorking\Project\AnJuXiaoBaoKWS\experiments\pretrain_hardneg_20260509_002\score_continuous_5s_best14.txt")
     parser.add_argument("--continuous_metadata", default=r"E:\CodeWorking\Project\AnJuXiaoBaoKWS\data\eval_continuous_false_alarm_5s_20260509\metadata.jsonl")
     parser.add_argument("--output_dir", default=r"E:\CodeWorking\Project\AnJuXiaoBaoKWS\data\prepared_pretrain_posbalanced_20260509")

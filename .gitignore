@@ -37,6 +37,12 @@ local.properties
 
 # Project generated archives and local-only history
 _archive/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
 
 # Local device capture artifacts may contain real voices.
 data/rk3566_live_capture_debug/

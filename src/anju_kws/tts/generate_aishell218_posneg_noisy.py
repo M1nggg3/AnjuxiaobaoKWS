@@ -277,8 +277,8 @@ def create_noisy_set(clean_rows: list[dict], noise_paths: list[Path], out_dir: P
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_root", default=r"E:\CodeWorking\Dataset\anju_xiaobao_kws_dataset_20260508")
-    parser.add_argument("--output_dir", default=r"E:\CodeWorking\Dataset\anju_xiaobao_aishell218_posneg_rknoise_20260509")
+    parser.add_argument("--dataset_root", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_kws_dataset_20260508")
+    parser.add_argument("--output_dir", default=r"E:\CodeWorking\datasets\AnJuXiaoBaoKWS\data\anju_xiaobao_aishell218_posneg_rknoise_20260509")
     parser.add_argument("--model_dir", default=r"D:\models\CosyVoice2-0.5B")
     parser.add_argument("--cosyvoice_repo", default=r"D:\codeWorking\TTS\CosyVoice")
     parser.add_argument("--seed", type=int, default=20260509)
